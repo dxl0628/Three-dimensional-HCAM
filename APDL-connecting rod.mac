@@ -1,0 +1,329 @@
+/CLEAR
+
+*DIM,EI,,95660,1, !建立一个矩阵EI，1008行（1008要改），1列
+*VREAD,EI,J,TXT,,jik,1,95660
+(e16.0)
+
+*DIM,SZ,,1,1, !建立一个矩阵EI，1008行（1008要改），1列
+*VREAD,SZ,qq,TXT,,jik,1,1
+(e16.0)
+
+*DIM,BH,,SZ(1,1),1, !建立一个矩阵EI，1008行（1008要改），1列
+*VREAD,BH,Q,TXT,,jik,1,SZ(1,1)
+(e16.0)
+
+/title,test_1   
+/PREP7  
+
+MPTEMP,1,0  
+ET,1,SOLID186  
+
+
+!****************************************************************
+*do,i,1,95660
+    MPDATA,EX,i,,EI(i,1)
+    MPDATA,PRXY,i,,0.25  
+*enddo
+!****************************************************************
+
+K,1,0,0,0,  
+K,2,30,0,0, 
+K,3,30,10,0, 
+K,4,0,10,0,  
+LSTR,       4,       1  
+LSTR,       1,       2  
+LSTR,       2,       3  
+LSTR,       3,       4  
+FLST,2,4,4  
+FITEM,2,1   
+FITEM,2,4   
+FITEM,2,3   
+FITEM,2,2   
+AL,P51X 
+CYL4,5,5,2.5    
+CYL4,25,5,1  
+
+VOFFST,2,10, ,  
+VOFFST,3,10, ,   
+VOFFST,1,2.5, , 
+
+
+/VIEW,1,1,1,1   
+/ANG,1  
+/REP,FAST
+   
+VSBV,       3,       1  
+VSBV,       4,       2  
+
+
+CYL4,5,5,2.5, ,2, ,2.5
+
+FLST,2,2,6,ORDE,2   
+FITEM,2,1   
+FITEM,2,-2  
+VGLUE,P51X   
+
+
+FINISH  
+
+/SOL
+FINISH  
+
+/PREP7  
+
+
+ESIZE,0.39,0,   
+MSHAPE,1,3D    !不规则网格
+MSHKEY,0       !不规则网格
+CM,_Y,VOLU  
+VSEL, , , ,       1 
+CM,_Y1,VOLU 
+CHKMSH,'VOLU'   
+CMSEL,S,_Y  
+VMESH,_Y1   
+CMDELE,_Y   
+CMDELE,_Y1  
+CMDELE,_Y2  
+
+ESIZE,0.35,0,   
+MSHAPE,1,3D    !不规则网格
+MSHKEY,0       !不规则网格
+CM,_Y,VOLU  
+VSEL, , , ,       3
+CM,_Y1,VOLU 
+CHKMSH,'VOLU'   
+CMSEL,S,_Y  
+VMESH,_Y1   
+CMDELE,_Y   
+CMDELE,_Y1  
+CMDELE,_Y2  
+  
+ 
+!****************************************************************
+*do,i,1,95660
+    FLST,2,1,2,ORDE,1   
+    FITEM,2,i
+    EMODIF,P51X,MAT,i,
+*enddo
+FINISH
+!**************************************************************** 
+
+
+/SOLU   
+FLST,2,2,5,ORDE,2   
+FITEM,2,11 
+FITEM,2,-12 
+DA,P51X,ALL,
+
+FLST,2,8,1,ORDE,8
+FITEM,2,192
+FITEM,2,213
+FITEM,2,211
+FITEM,2,209
+FITEM,2,207
+FITEM,2,205
+FITEM,2,203
+FITEM,2,182 
+F,P51X,FY,-10
+
+FLST,2,8,1,ORDE,8
+FITEM,2,1
+FITEM,2,37  
+FITEM,2,39
+FITEM,2,41
+FITEM,2,43
+FITEM,2,45
+FITEM,2,47
+FITEM,2,26
+F,P51X,FY,-10
+
+FLST,2,8,1,ORDE,8
+FITEM,2,2
+FITEM,2,14 
+FITEM,2,16
+FITEM,2,18
+FITEM,2,20
+FITEM,2,22
+FITEM,2,24
+FITEM,2,12
+F,P51X,FY,-10
+
+FLST,2,8,1,ORDE,8
+FITEM,2,358
+FITEM,2,379 
+FITEM,2,377
+FITEM,2,375
+FITEM,2,373
+FITEM,2,371
+FITEM,2,369
+FITEM,2,348
+F,P51X,FY,-10
+
+FINISH
+/SOL
+/STATUS,SOLU
+SOLVE   
+
+!************************
+
+/POST1  
+*get,enum,elem,,count
+*get,nummin,elem,,num,min
+*dim,yinlix,,enum,1
+*dim,yinliy,,enum,1
+*dim,yinlixy,,enum,1
+*dim,yinbianx,,enum,1
+*dim,yinbiany,,enum,1
+*dim,yinbianxy,,enum,1
+!************************
+*dim,yinliz,,enum,1
+*dim,yinlixz,,enum,1
+*dim,yinliyz,,enum,1
+*dim,yinbianz,,enum,1
+*dim,yinbianxz,,enum,1
+*dim,yinbianyz,,enum,1
+!************************
+etable,YLx,s,x
+etable,YLy,s,y 
+etable,YLxy,s,xy
+etable,YBx,epel,x
+etable,YBy,epel,y
+etable,YBxy,epel,xy
+!************************
+etable,YLxz,s,xz
+etable,YLyz,s,yz
+etable,YLz,s,z
+etable,YBz,epel,z
+etable,YBxz,epel,xz
+etable,YByz,epel,yz
+
+*vget,yinlix(1,1),elem,1,etab,YLx
+*vget,yinliy(1,1),elem,1,etab,YLy
+*vget,yinlixy(1,1),elem,1,etab,YLxy
+*vget,yinbianx(1,1),elem,1,etab,YBx
+*vget,yinbiany(1,1),elem,1,etab,YBy
+*vget,yinbianxy(1,1),elem,1,etab,YBxy
+!*************************************
+*vget,yinliz(1,1),elem,1,etab,YLz
+*vget,yinlixz(1,1),elem,1,etab,YLxz
+*vget,yinliyz,(1,1),elem,1,etab,YLyz
+*vget,yinbianz,(1,1),elem,1,etab,YBz
+*vget,yinbianxz,(1,1),elem,1,etab,YBxz
+*vget,yinbianyz,(1,1),elem,1,etab,YByz
+!***************************************
+*cfopen,YLx,txt
+*vwrite,yinlix(1,1)
+(f10.4)
+*cfclose
+*cfopen,YLy,txt
+*vwrite,yinliy(1,1)
+(f10.4)
+*cfclose
+*cfopen,YLxy,txt
+*vwrite,yinlixy(1,1)
+(f10.4)
+*cfclose
+*cfopen,YBx,txt
+*vwrite,yinbianx(1,1)
+(e10.4)
+*cfclose
+*cfopen,YBy,txt
+*vwrite,yinbiany(1,1)
+(e10.4)
+*cfclose
+*cfopen,YBxy,txt
+*vwrite,yinbianxy(1,1)
+(e10.4)
+*cfclose
+*cfopen,YLz,txt
+*vwrite,yinliz(1,1)
+(f10.4)
+*cfclose
+*cfopen,YLxz,txt
+*vwrite,yinlixz(1,1)
+(f10.4)
+*cfclose
+*cfopen,YLyz,txt
+*vwrite,yinliyz(1,1)
+(f10.4)
+*cfclose
+*cfopen,YBz,txt
+*vwrite,yinbianz(1,1)
+(e10.4)
+*cfclose
+*cfopen,YBxz,txt
+*vwrite,yinbianxz(1,1)
+(e10.4)
+*cfclose
+*cfopen,YByz,txt
+*vwrite,yinbianyz(1,1)
+(e10.4)
+*cfclose
+PLDISP,1                     !显示变形云图 
+PLNSOL, S,EQV, 0,1.0         !显示等效应力云图 
+
+
+/UDOC,1,TYPE,OFF
+/UDOC,1,DATE,OFF
+/UDOC,1,TYP2,OFF
+/UDOC,1,INUM,OFF
+/UDOC,1,BCDC,OFF
+/UDOC,1,SURF,OFF
+/UDOC,1,BODY,OFF
+/UDOC,1,VECT,OFF
+/UDOC,1,GWIN,OFF
+/UDOC,1,VIEW,OFF
+/UDOC,1,PSTA,OFF
+/UDOC,1,MISC,OFF
+
+/ANG,1,-30,YS,1 
+/REP,FAST   
+/ANG,1,30,XS,1  
+/REP,FAST   
+
+/TRIAD,OFF  
+/REPLOT 
+
+*do,i,1,SZ(1,1)
+    ESEL,U,MAT,,BH(i,1) 
+*enddo
+
+
+/PNUM,KP,0  
+/PNUM,LINE,0
+/PNUM,AREA,0
+/PNUM,VOLU,0
+/PNUM,NODE,0
+/PNUM,TABN,0
+/PNUM,SVAL,0
+/PNUM,DOMA,0
+/NUMBER,-1  
+/PNUM,MAT,1 
+/REPLOT 
+
+/VIEW,  1, -0.381511138132    ,  0.151025983571    ,  0.911943202051
+/ANG,   1,  -18.7682439785  
+/REPLO  
+ 
+SAVE
+FINISH
+/PNUM,KP,0  
+/PNUM,LINE,0
+/PNUM,AREA,0
+/PNUM,VOLU,0
+/PNUM,NODE,0
+/PNUM,TABN,0
+/PNUM,SVAL,0
+	
+/REPLOT 
+/GRAPHICS,POWER     !用於批处理保存单元图和云图
+~eui,'package require ansys'
+~eui,'ansys::report::setdirectory "picture2"'
+EPLOT
+~eui,'ansys::report::imagecapture {}'
+!/EXIT,NOSAV 
+
+
+！MPTEMP,1,0  
+！MPDATA,EX,1,,2.1E10 
+！MPDATA,PRXY,1,,0.2     7.88861e-031
